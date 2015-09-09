@@ -12,26 +12,21 @@
 
 (core/deftask expect
   "Run Expectation Tests"
-  []
+  [n namespaces NAMESPACES #{sym} "Namespaces that contain expectations"]
   (let [pool (pod/pod-pool
-              (update-in (core/get-env) [:dependencies] into pod-deps))]
+              (update-in (core/get-env) [:dependencies] into pod-deps))
+        namespaces (seq namespaces)]
     (core/cleanup (pool :shutdown))
     (core/set-env! :source-paths #{"test"})
     (core/with-pre-wrap fileset 
       (let [p (pool :refresh)]
         (doto p 
-          ;;(pod/require-in "expectations")
           (pod/with-eval-in 
-            (println "inside a pod!")
             (require '[expectations :refer :all])
-            (require '[upgradingdave.expect-test])
+            (doseq [ns '~namespaces] (require ns))
             (disable-run-on-shutdown)
-            (run-tests '[upgradingdave.expect-test])
-            )
-          )
-        (println "cleaning up pod")
-        (pod/destroy-pod p)
-        )
+            (run-tests (into [] '~namespaces))
+            )))
       fileset))
   )
 

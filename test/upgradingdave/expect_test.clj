@@ -7,4 +7,6 @@
 
 (expect "awesome!" "awesome!")
 
+(expect "nice!" "nice!")
+
 
