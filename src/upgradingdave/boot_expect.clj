@@ -24,7 +24,6 @@
   (let [pool (pod/pod-pool
               (update-in (core/get-env) [:dependencies] into pod-deps))]
     (core/cleanup (pool :shutdown))
-    (core/set-env! :source-paths #{"test"})
     (core/with-pre-wrap fileset 
       (let [p (pool :refresh)
             namespaces (or (seq namespaces)
