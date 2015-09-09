@@ -7,4 +7,4 @@
 
 (expect "awesome!" "awesome!")
 
-(expect "1" (str 2))
+
