@@ -2,13 +2,14 @@
   (:require [boot.core :as core]
             [boot.repl :as repl ]))
 
-(defn find-cider-el 
-  "Find cider.el file"
-  []
-  (let [h  (System/getProperty "user.home")
-        e  (str h "/.emacs.d")
-        d  (file-seq (java.io.File. e))
-        fs (filter #(= "cider.el" (.getName %)) d)]
+(defn find-file 
+  "Search .emacs.d directory for an elisp file"
+  [fname]
+  (let [fs  (-> (System/getProperty "user.home")
+                (str "/.emacs.d")
+                (java.io.File.)
+                file-seq)
+        fs (filter #(= fname (.getName %)) fs)]
     (cond
 
       (empty? fs)
@@ -16,9 +17,7 @@
 
       (> 1 (count fs))
       (do
-        (println "Found multiple versions of cider.el. Will use first." e)
-        (doseq [n fs] 
-          (println (.getName n)))
+        (println "Found multiple versions of" fname)
         (first fs))
 
       :else 
@@ -28,16 +27,22 @@
 (defn cider-version 
   "Try to figure out which cider version is installed inside .emacs.d"
   []
-  (if-let [cider-file (find-cider-el)]
-    (second (re-find #".*cider-version \"(.*)\"" (slurp cider-file)))))
+  (if-let [f (find-file "cider.el")]
+    (second (re-find #".*cider-version \"(.*)\"" (slurp f)))))
+
+(defn clj-refactor-version 
+  "Try to figure out which cider version is installed inside .emacs.d"
+  []
+  (if-let [f (find-file "clj-refactor.el")]
+    (second (re-find #".*cljr-version \"(.*)\"" (slurp f)))))
 
 (core/deftask cider
   "Call this before calling the repl task in order to setup
   cider-nrepl and refactor-nrepl middleware."
-  [c cider    VERSION str "cider/cider-nrepl version number, defaults to 0.9.1"
-   r refactor VERSION str "refactor-nrepl version number, defaults to 1.1.0"]
-  (let [c (or cider "0.9.1")
-        r (or refactor "1.1.0")]
+  [c cider    VERSION str "cider-nrepl version number. By default, this will try and figure out the version by looking inside .emacs.d"
+   r refactor VERSION str "clj-refactor version number. By default, this will try and figure out the version by looking inside .emacs.d"]
+  (let [c (or cider (cider-version) "0.9.1")
+        r (or refactor (clj-refactor-version) "1.1.0")]
     (fn middleware [next-handler]
       (fn handler [fileset]
         (core/set-env! :dependencies 

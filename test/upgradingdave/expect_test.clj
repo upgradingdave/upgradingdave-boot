@@ -3,10 +3,8 @@
 
 (expect nil? nil)
 
-(expect "hi" "hi")
+(expect "sanity check to see if expect task is working" 
+        "sanity check to see if expect task is working")
 
-(expect "awesome!" "awesome!")
-
-(expect "nice!" "nice!")
 
 

@@ -6,17 +6,19 @@
  :source-paths #{"src"}
  )
 
-(def project 
-  {:id "boot-sitegen"
-   :version "0.1.0"
-   :group-id "com.upgradgindave"
-   })
+(require '[upgradingdave.boot-expect :as e]
+         '[upgradingdave.boot-cider  :refer :all])
 
-;; Custom boot tasks
-(require '[upgradingdave.boot-expect :refer :all])
+(deftask cider-repl []
+  (comp (cider)
+        (repl)))
 
-(deftask dev []
+(deftask expect []
+  (merge-env! :source-paths #{"test"})
+  (e/expect))
+
+(deftask auto-expect []
   (merge-env! :source-paths #{"test"})
   (comp (watch)
         (speak)
-        (expect)))
+        (e/expect)))
