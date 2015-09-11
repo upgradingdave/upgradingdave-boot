@@ -42,3 +42,28 @@ You can also filter on namespaces
 
     boot expect -f "(re-matches #\"my-ns.*\" %)"
 
+# Themes for the speak task
+
+As you know, a very important part of any build system is what sounds
+it plays when the build succeeds or fails.
+
+Add this as a dependency to your project and get some extra themes for
+the `speak` task
+
+	(merge-env!
+	  [upgradingdave/boot-dave   "0.1.0"])
+
+    (boot (speak :theme "homer"))
+
+# install-clj
+
+Task to create pom, create jar containing clj code, and deploy the jar
+to local maven repository.
+
+    (def +version+ "0.1.0")
+	(task-options!
+	 pom {:project 'my-group/my-project-name
+	      :version +version+
+	      :description "My awesome project"})
+
+    (boot (install-clj))
