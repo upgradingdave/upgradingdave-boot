@@ -9,13 +9,20 @@ nrepl-middleware.
 
 The `upgradingdave.boot-cider` task will attempt to automatically
 discover which versions of `cider-nrepl` and `clj-refactor` elisp
-packages are installed inside `.emacs.d/elpa` and it wires everything
-up so that running the following will create a nice cider-enabled
-nrepl
+packages are installed inside `.emacs.d/elpa`. When it finds cider or
+clj-refactor installed in elpa, this will wire everything up so that
+running the following will create a nice cider-enabled nrepl:
 
     boot cider nrepl
 
 (make sure to call the cider task before the nrepl task)
+
+To make it even more automatic, you can customize cider to use this
+cider task when doing `cider-jack-in`. Just add this to your emacs
+config
+
+    (setq cider-boot-parameters "cider repl -s wait")
+
 
 You can also pass it specific version numbers for `cider-nrepl` and/or
 `clj-refactor`
@@ -28,7 +35,7 @@ I wanted to use the expectations library with emacs and found [this
 thread](https://github.com/jaycfields/expectations/issues/52).
 
 `upgradingdave.boot-expect` is an attempt to write a boot task to run
-expectations. It works pretty well, but definitely a work in progress.
+expectations. 
 
 To run expectations for all namespaces
 
@@ -41,6 +48,9 @@ You can specify namespaces
 You can also filter on namespaces
 
     boot expect -f "(re-matches #\"my-ns.*\" %)"
+
+Note: I encountered jvm out of memory exceptions when using Java 7. I
+upgraded to Java 8 and haven't seen any problems since. 
 
 # Themes for the speak task
 

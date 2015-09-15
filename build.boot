@@ -10,7 +10,7 @@
 (require '[upgradingdave.boot-expect :as e]
          '[upgradingdave.boot-cider  :refer :all])
 
-(def +version+ "0.1.0")
+(def +version+ "0.1.1")
 
 (task-options!
  pom {:project 'upgradingdave/boot-dave
