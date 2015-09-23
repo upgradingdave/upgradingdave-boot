@@ -13,6 +13,8 @@ packages are installed inside `.emacs.d/elpa`. When it finds cider or
 clj-refactor installed in elpa, this will wire everything up so that
 running the following will create a nice cider-enabled nrepl:
 
+    (require '[upgradingdave.boot-cider :refer [cider]])
+
     boot cider nrepl
 
 (make sure to call the cider task before the nrepl task)
@@ -35,7 +37,9 @@ I wanted to use the expectations library with emacs and found [this
 thread](https://github.com/jaycfields/expectations/issues/52).
 
 `upgradingdave.boot-expect` is an attempt to write a boot task to run
-expectations. 
+expectations.
+
+    (require '[upgradingdave.boot-expect :refer [expect]])
 
 To run expectations for all namespaces
 
@@ -48,6 +52,10 @@ You can specify namespaces
 You can also filter on namespaces
 
     boot expect -f "(re-matches #\"my-ns.*\" %)"
+
+Run expectations whenever files change
+
+    boot watch expect
 
 Note: I encountered jvm out of memory exceptions when using Java 7. I
 upgraded to Java 8 and haven't seen any problems since. 
